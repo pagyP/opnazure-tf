@@ -1,4 +1,8 @@
-
+# resource "azurerm_marketplace_agreement" "freebsd" {
+#   publisher = "thefreebsdfoundation"
+#   offer     = "freebsd-13_1"
+#   plan      = "13_1-release"
+# }
 locals {
   nic_names    = "${var.vm_name}-nic"
   os_disk_name = "${var.vm_name}-osdisk"
