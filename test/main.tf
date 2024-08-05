@@ -87,6 +87,9 @@ resource "azurerm_linux_virtual_machine" "primaryfw" {
   admin_username                  = "adminuser"
   admin_password                  = "Qwertyuiop123456789"
   disable_password_authentication = false
+  boot_diagnostics {
+    storage_account_uri = ""
+  }
   network_interface_ids = [
     azurerm_network_interface.primary-trust.id,
     azurerm_network_interface.primary-untrust.id

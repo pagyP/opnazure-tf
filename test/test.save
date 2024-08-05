@@ -1,3 +1,4 @@
+
 resource "azurerm_public_ip" "elbpip" {
     name                = "elb-pip"
     location            = azurerm_resource_group.example.location
