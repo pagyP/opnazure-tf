@@ -44,9 +44,9 @@ module "primary-fw" {
   image_offer       = "freebsd-13_1"
   image_sku         = "freebsd-13_1"
   image_version     = "latest"
-  vm_size           = "Standard_B2s"
+  vm_size           = "Standard_F2"
   os_disk_caching   = "ReadWrite"
-  data_disk_caching = "None"
+  #data_disk_caching = "None"
   untrust_subnet_id = module.opnsense-vnet.subnets.subnet0.resource_id
   trust_subnet_id   = module.opnsense-vnet.subnets.subnet1.resource_id
 }

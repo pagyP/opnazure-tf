@@ -55,10 +55,10 @@ variable "os_disk_caching" {
   type = string
 }
 
-variable "data_disk_caching" {
-  type    = string
-  default = "None"
-}
+# variable "data_disk_caching" {
+#   type    = string
+#   default = "None"
+# }
 
 variable "data_disk_size_gb" {
   type    = number
