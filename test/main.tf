@@ -56,7 +56,7 @@ resource "azurerm_network_interface" "primary-untrust" {
 
 
 resource "azurerm_network_interface" "secondary-trust" {
-  name                = "trust-nic"
+  name                = "sec-trust-nic"
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
 
@@ -68,7 +68,7 @@ resource "azurerm_network_interface" "secondary-trust" {
 }
 
 resource "azurerm_network_interface" "secondary-untrust" {
-  name                = "untrust-nic"
+  name                = "sec-untrust-nic"
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
 
