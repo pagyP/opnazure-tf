@@ -6,7 +6,7 @@
 
 resource "azurerm_resource_group" "example" {
   name     = "example-resources1"
-  location = "france central"
+  location = "sweden central"
 }
 
 resource "azurerm_virtual_network" "example" {
@@ -80,10 +80,11 @@ resource "azurerm_network_interface" "secondary-untrust" {
 }
 
 resource "azurerm_linux_virtual_machine" "primaryfw" {
+
   name                            = "opnsense-pri"
   resource_group_name             = azurerm_resource_group.example.name
   location                        = azurerm_resource_group.example.location
-  size                            = "Standard_F2"
+  size                            = "Standard_B2s"
   admin_username                  = "adminuser"
   admin_password                  = "Qwertyuiop123456789"
   disable_password_authentication = false
@@ -103,32 +104,58 @@ resource "azurerm_linux_virtual_machine" "primaryfw" {
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
-    name = "pri-fw-os-disk"
+    name                 = "pri-fw-os-disk"
   }
+  # plan {
+  #   name      = "13_1-release"
+  #   publisher = "thefreebsdfoundation"
+  #   product   = "freebsd-13_1"
+  # }
   plan {
-    name      = "13_1-release"
+    name      = "14_0-release-amd64-gen2-zfs"
     publisher = "thefreebsdfoundation"
-    product   = "freebsd-13_1"
+    product   = "freebsd-14_0"
   }
 
+  # source_image_reference {
+  #   publisher = "thefreebsdfoundation"
+  #   offer     = "freebsd-13_1"
+  #   sku       = "13_1-release"
+  #   version   = "latest"
+
+  # }
   source_image_reference {
     publisher = "thefreebsdfoundation"
-    offer     = "freebsd-13_1"
-    sku       = "13_1-release"
+    offer     = "freebsd-14_0"
+    sku       = "14_0-release-amd64-gen2-zfs"
     version   = "latest"
 
   }
   # depends_on = [ azurerm_marketplace_agreement.freebsd ]
+  # depends_on = [ azurerm_lb.example,
+  # azurerm_lb_backend_address_pool.example,
+  # azurerm_lb_backend_address_pool_address.primaryfw,
+  # azurerm_lb_backend_address_pool_address.secondaryfw,
+  # azurerm_lb_nat_rule.nat1,
+  # azurerm_lb_nat_rule.nat2,
+  # azurerm_lb_outbound_rule.this ]
 }
 
+# resource "time_sleep" "wait" {
+#   depends_on = [azurerm_linux_virtual_machine.primaryfw]
+#   create_duration = "120s"
+# }
 resource "azurerm_linux_virtual_machine" "secondaryfw" {
   name                            = "opnsense-sec"
   resource_group_name             = azurerm_resource_group.example.name
   location                        = azurerm_resource_group.example.location
-  size                            = "Standard_F2"
+  size                            = "Standard_B2s"
   admin_username                  = "adminuser"
   admin_password                  = "Qwertyuiop123456789"
   disable_password_authentication = false
+  boot_diagnostics {
+    storage_account_uri = ""
+  }
   network_interface_ids = [
     azurerm_network_interface.secondary-trust.id,
     azurerm_network_interface.secondary-trust.id
@@ -142,20 +169,42 @@ resource "azurerm_linux_virtual_machine" "secondaryfw" {
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
-    name = "sec-fw-os-disk"
+    name                 = "sec-fw-os-disk"
   }
+  # plan {
+  #   name      = "13_1-release"
+  #   publisher = "thefreebsdfoundation"
+  #   product   = "freebsd-13_1"
+  # }
   plan {
-    name      = "13_1-release"
+    name      = "14_0-release-amd64-gen2-zfs"
     publisher = "thefreebsdfoundation"
-    product   = "freebsd-13_1"
+    product   = "freebsd-14_0"
   }
 
+  # source_image_reference {
+  #   publisher = "thefreebsdfoundation"
+  #   offer     = "freebsd-13_1"
+  #   sku       = "13_1-release"
+  #   version   = "latest"
+
+  # }
   source_image_reference {
     publisher = "thefreebsdfoundation"
-    offer     = "freebsd-13_1"
-    sku       = "13_1-release"
+    offer     = "freebsd-14_0"
+    sku       = "14_0-release-amd64-gen2-zfs"
     version   = "latest"
 
   }
+  # depends_on = [ azurerm_linux_virtual_machine.primaryfw,
+  # time_sleep.wait]
   # depends_on = [ azurerm_marketplace_agreement.freebsd ]
+  # depends_on = [ azurerm_lb.example,
+  # azurerm_lb_backend_address_pool.example,
+  # azurerm_lb_backend_address_pool_address.primaryfw,
+  # azurerm_lb_backend_address_pool_address.secondaryfw,
+  # azurerm_lb_nat_rule.nat1,
+  # azurerm_lb_nat_rule.nat2,
+  # azurerm_lb_outbound_rule.this,
+  # azurerm_linux_virtual_machine.primaryfw ]
 }
